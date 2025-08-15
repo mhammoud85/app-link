@@ -28,6 +28,7 @@
       <!-- Replace these with your real URLs -->
       <a class="button" id="iosLink" href="https://apps.apple.com/app/id6749238164">Open in Apple App Store</a>
       <a class="button" id="androidLink" href="https://play.google.com/store/apps/details?id=com.mmh.talabiya">Open in Google Play</a>
+      <a class="button" id="webLink" href="www.talabiyamarket.com">Visit Website</a>
     </div>
 
     <p class="hint">Tip: add <code>?platform=ios</code> or <code>?platform=android</code> to test from desktop.</p>
@@ -37,6 +38,7 @@
       <!-- Replace these with your real URLs -->
       <a href="https://apps.apple.com/app/id6749238164">Apple App Store</a> ·
       <a href="https://play.google.com/store/apps/details?id=com.mmh.talabiya">Google Play</a>
+      <a href="www.talabiyamarket.com">Website</a>
     </noscript>
   </div>
 
@@ -45,10 +47,12 @@
       // TODO: set your real store URLs here
       const IOS_URL = "https://apps.apple.com/app/id6749238164";
       const ANDROID_URL = "https://play.google.com/store/apps/details?id=com.mmh.talabiya";
+      const WEB_URL = "www.talabiyamarket.com";
 
       // Also wire them to the visible buttons
       document.getElementById("iosLink").href = IOS_URL;
       document.getElementById("androidLink").href = ANDROID_URL;
+      document.getElementById("webLink").href = WEB_URL;
 
       const statusEl = document.getElementById("status");
       const fallbackEl = document.getElementById("fallback");
@@ -96,9 +100,8 @@
         statusEl.textContent = "Detected iOS device…";
         redirect(IOS_URL);
       } else {
-        // Desktop or unknown device: show chooser
-        statusEl.textContent = "Choose your store:";
-        fallbackEl.hidden = false;
+        statusEl.textContent = "Detected Desktop device…";
+        redirect(WEB_URL);
       }
     })();
   </script>

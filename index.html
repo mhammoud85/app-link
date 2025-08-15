@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Redirecting to the right app store…</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="refresh" content="120"> <!-- safety auto-refresh -->
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+           margin: 0; min-height: 100dvh; display: grid; place-items: center; }
+    .card { max-width: 680px; padding: 24px; border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.08); text-align: center; }
+    h1 { font-size: 1.25rem; margin: 0 0 8px; }
+    p { margin: 6px 0; opacity: .8; }
+    .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+    a.button { padding: 12px 16px; border-radius: 12px; text-decoration: none; border: 1px solid #ccc; }
+    .hint { font-size: .9rem; opacity: .7; margin-top: 10px; }
+    noscript a { display: inline-block; margin: 0 6px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Redirecting to the right app store…</h1>
+    <p id="status">Hang on a moment.</p>
+
+    <div class="btns" id="fallback" hidden>
+      <!-- Replace these with your real URLs -->
+      <a class="button" id="iosLink" href="https://apps.apple.com/app/id123456789">Open in Apple App Store</a>
+      <a class="button" id="androidLink" href="https://play.google.com/store/apps/details?id=com.example.app">Open in Google Play</a>
+    </div>
+
+    <p class="hint">Tip: add <code>?platform=ios</code> or <code>?platform=android</code> to test from desktop.</p>
+
+    <noscript>
+      JavaScript is required for automatic redirection. Use one of these:
+      <!-- Replace these with your real URLs -->
+      <a href="https://apps.apple.com/app/id123456789">Apple App Store</a> ·
+      <a href="https://play.google.com/store/apps/details?id=com.example.app">Google Play</a>
+    </noscript>
+  </div>
+
+  <script>
+    (function () {
+      // TODO: set your real store URLs here
+      const IOS_URL = "https://apps.apple.com/app/id123456789";
+      const ANDROID_URL = "https://play.google.com/store/apps/details?id=com.example.app";
+
+      // Also wire them to the visible buttons
+      document.getElementById("iosLink").href = IOS_URL;
+      document.getElementById("androidLink").href = ANDROID_URL;
+
+      const statusEl = document.getElementById("status");
+      const fallbackEl = document.getElementById("fallback");
+
+      // Optional desktop override for testing: ?platform=ios or ?platform=android
+      const params = new URLSearchParams(location.search);
+      const override = (params.get("platform") || "").toLowerCase();
+
+      function isAndroid(ua) {
+        return /android/i.test(ua);
+      }
+      function isIOS(ua) {
+        // Covers iPhone/iPad/iPod; includes iPadOS 13+ which reports as "Mac" but has touch
+        return /iPad|iPhone|iPod/.test(ua) ||
+               (ua.includes("Mac") && "ontouchend" in document);
+      }
+
+      function redirect(url) {
+        // replace() avoids creating a back-button loop
+        window.location.replace(url);
+        // Safety: if the redirect is blocked or slow, reveal buttons
+        setTimeout(() => {
+          statusEl.textContent = "If nothing happens, choose your store:";
+          fallbackEl.hidden = false;
+        }, 2000);
+      }
+
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+
+      if (override === "ios") {
+        statusEl.textContent = "Detected iOS (override)…";
+        redirect(IOS_URL);
+        return;
+      }
+      if (override === "android") {
+        statusEl.textContent = "Detected Android (override)…";
+        redirect(ANDROID_URL);
+        return;
+      }
+
+      if (isAndroid(ua)) {
+        statusEl.textContent = "Detected Android device…";
+        redirect(ANDROID_URL);
+      } else if (isIOS(ua)) {
+        statusEl.textContent = "Detected iOS device…";
+        redirect(IOS_URL);
+      } else {
+        // Desktop or unknown device: show chooser
+        statusEl.textContent = "Choose your store:";
+        fallbackEl.hidden = false;
+      }
+    })();
+  </script>
+</body>
+</html>

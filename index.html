@@ -4,11 +4,22 @@
   <meta charset="utf-8" />
   <title>Talabiya Market</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Open Graph tags for social preview -->
+
+  <!-- Open Graph / Social preview -->
   <meta property="og:title" content="Talabiya Market" />
   <meta property="og:description" content="Your Local Grocery & Essentials Delivery App." />
   <meta property="og:image" content="https://mhammoud85.github.io/app-link/preview.jpg" />
   <meta property="og:type" content="website" />
+  <!-- If/when you point a custom domain (talabiyamarket.com) to GitHub Pages, set this to that domain -->
+  <meta property="og:url" content="https://talabiyamarket.com/" />
+  <meta property="og:site_name" content="Talabiya Market" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Talabiya Market" />
+  <meta name="twitter:description" content="Your Local Grocery & Essentials Delivery App." />
+  <meta name="twitter:image" content="https://mhammoud85.github.io/app-link/preview.jpg" />
+
   <meta http-equiv="refresh" content="120"> <!-- safety auto-refresh -->
   <style>
     :root { color-scheme: light dark; }
@@ -30,31 +41,27 @@
     <p id="status">Hang on a moment.</p>
 
     <div class="btns" id="fallback" hidden>
-      <!-- Replace these with your real URLs -->
       <a class="button" id="iosLink" href="https://apps.apple.com/app/id6749238164">Open in Apple App Store</a>
       <a class="button" id="androidLink" href="https://play.google.com/store/apps/details?id=com.mmh.talabiya">Open in Google Play</a>
-      <a class="button" id="webLink" href="www.talabiyamarket.com">Visit Website</a>
+      <a class="button" id="webLink" href="https://www.talabiyamarket.com">Visit Website</a>
     </div>
 
     <p class="hint">Tip: add <code>?platform=ios</code> or <code>?platform=android</code> to test from desktop.</p>
 
     <noscript>
       JavaScript is required for automatic redirection. Use one of these:
-      <!-- Replace these with your real URLs -->
       <a href="https://apps.apple.com/app/id6749238164">Apple App Store</a> ·
-      <a href="https://play.google.com/store/apps/details?id=com.mmh.talabiya">Google Play</a>
-      <a href="www.talabiyamarket.com">Website</a>
+      <a href="https://play.google.com/store/apps/details?id=com.mmh.talabiya">Google Play</a> ·
+      <a href="https://www.talabiyamarket.com">Website</a>
     </noscript>
   </div>
 
   <script>
     (function () {
-      // TODO: set your real store URLs here
       const IOS_URL = "https://apps.apple.com/app/id6749238164";
       const ANDROID_URL = "https://play.google.com/store/apps/details?id=com.mmh.talabiya";
-      const WEB_URL = "www.talabiyamarket.com";
+      const WEB_URL = "https://www.talabiyamarket.com";
 
-      // Also wire them to the visible buttons
       document.getElementById("iosLink").href = IOS_URL;
       document.getElementById("androidLink").href = ANDROID_URL;
       document.getElementById("webLink").href = WEB_URL;
@@ -62,23 +69,16 @@
       const statusEl = document.getElementById("status");
       const fallbackEl = document.getElementById("fallback");
 
-      // Optional desktop override for testing: ?platform=ios or ?platform=android
       const params = new URLSearchParams(location.search);
       const override = (params.get("platform") || "").toLowerCase();
 
-      function isAndroid(ua) {
-        return /android/i.test(ua);
-      }
+      function isAndroid(ua) { return /android/i.test(ua); }
       function isIOS(ua) {
-        // Covers iPhone/iPad/iPod; includes iPadOS 13+ which reports as "Mac" but has touch
-        return /iPad|iPhone|iPod/.test(ua) ||
-               (ua.includes("Mac") && "ontouchend" in document);
+        return /iPad|iPhone|iPod/.test(ua) || (ua.includes("Mac") && "ontouchend" in document);
       }
 
       function redirect(url) {
-        // replace() avoids creating a back-button loop
         window.location.replace(url);
-        // Safety: if the redirect is blocked or slow, reveal buttons
         setTimeout(() => {
           statusEl.textContent = "If nothing happens, choose your store:";
           fallbackEl.hidden = false;
@@ -87,16 +87,8 @@
 
       const ua = navigator.userAgent || navigator.vendor || window.opera;
 
-      if (override === "ios") {
-        statusEl.textContent = "Detected iOS (override)…";
-        redirect(IOS_URL);
-        return;
-      }
-      if (override === "android") {
-        statusEl.textContent = "Detected Android (override)…";
-        redirect(ANDROID_URL);
-        return;
-      }
+      if (override === "ios") return redirect(IOS_URL);
+      if (override === "android") return redirect(ANDROID_URL);
 
       if (isAndroid(ua)) {
         statusEl.textContent = "Detected Android device…";
